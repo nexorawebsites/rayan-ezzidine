@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="عرض تقديمي تفاعلي: الأدب في العصر الجاهلي — ملامح الحياة العربية قبل الإسلام وأثرها في الشعر والنثر.">
+<title>الأدب في العصر الجاهلي — عرض تقديمي</title>
+
+<!-- الخطوط العربية -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   الهوية البصرية: مخطوط عربي قديم — ألوان فاتحة تراثية
+   ============================================================ */
+:root{
+  --paper:#F8F1E3;        /* عاجي فاتح */
+  --paper-2:#EADCC2;      /* ورق معتّق */
+  --sand:#D8C4A0;         /* بيج رملي */
+  --brown:#76583D;        /* بني المخطوطات */
+  --ink:#38291F;          /* بني داكن للنص */
+  --olive:#727A53;        /* أخضر زيتوني */
+  --gold:#B69A62;         /* ذهبي مطفأ */
+  --gold-soft:rgba(182,154,98,.55);
+  --line:rgba(118,88,61,.32);
+  --shadow:0 16px 38px -18px rgba(56,41,31,.45);
+  --serif-display:"Aref Ruqaa","Amiri","Traditional Arabic",serif;
+  --serif-body:"Amiri","Traditional Arabic",serif;
+  --sans:"Noto Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  overflow:hidden;
+  height:100dvh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(182,154,98,.35);color:var(--ink)}
+
+/* نسيج ورقي خفيف جدًا على كامل الخلفية */
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.46 0 0 0 0 0.34 0 0 0 0 0.2 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* تعتيم هامشي رقيق يحاكي حواف المخطوط */
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 8%, transparent 55%, rgba(118,88,61,.10) 100%),
+    radial-gradient(120% 90% at 50% 100%, transparent 55%, rgba(118,88,61,.12) 100%);
+}
+
+/* ---------- رموز وزخارف ---------- */
+.ic{width:1em;height:1em;display:inline-block;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:1.3}
+.ic.lg{width:1.35em;height:1.35em}
+.orn{display:flex;align-items:center;gap:14px;justify-content:center}
+.orn .line{height:1px;width:min(150px,22vw);background:linear-gradient(to left,transparent,var(--gold-soft),transparent)}
+.orn .star{color:var(--gold);width:22px;height:22px;flex:none}
+
+/* ---------- هيكل الشرائح ---------- */
+#deck{position:fixed;inset:0;z-index:1;perspective:1500px}
+.slide{
+  position:absolute;inset:0;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),visibility 0s .78s;
+  will-change:opacity,transform;
+  overflow:hidden;
+}
+.slide.active{
+  opacity:1;visibility:visible;pointer-events:auto;
+  transform:none;z-index:4;
+  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),visibility 0s;
+}
+.from-next{transform:translateX(3.4rem) rotateY(-5deg);opacity:0}
+.from-prev{transform:translateX(-3.4rem) rotateY(5deg);opacity:0}
+.exit-next{transform:translateX(-3.4rem) rotateY(5deg) scale(.985);opacity:0;z-index:2}
+.exit-prev{transform:translateX(3.4rem) rotateY(-6deg) scale(.985);opacity:0;z-index:2}
+
+.slide-inner{
+  position:relative;z-index:2;height:100%;
+  max-width:1300px;margin-inline:auto;
+  padding:clamp(22px,4vh,48px) clamp(30px,4.5vw,68px) clamp(86px,12vh,110px);
+  display:flex;flex-direction:column;justify-content:center;
+  gap:clamp(12px,2.2vh,26px);
+}
+
+/* إطار المخطوط المزدوج حول كل شريحة */
+.frame{position:absolute;inset:clamp(10px,1.6vw,20px);border:1px solid var(--line);border-radius:4px;pointer-events:none;z-index:1}
+.frame::before{content:"";position:absolute;inset:5px;border:1px solid var(--gold-soft);border-radius:3px}
+.cnc{position:absolute;width:16px;height:16px;border:0 solid var(--gold)}
+.cnc.tl{top:-2px;left:-2px;border-top-width:2px;border-left-width:2px}
+.cnc.tr{top:-2px;right:-2px;border-top-width:2px;border-right-width:2px}
+.cnc.bl{bottom:-2px;left:-2px;border-bottom-width:2px;border-left-width:2px}
+.cnc.br{bottom:-2px;right:-2px;border-bottom-width:2px;border-right-width:2px}
+.cnc::after{content:"";position:absolute;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
+.cnc.tl::after{top:-4px;left:-4px}.cnc.tr::after{top:-4px;right:-4px}
+.cnc.bl::after{bottom:-4px;left:-4px}.cnc.br::after{bottom:-4px;right:-4px}
+
+/* كلمة زخرفية خافتة في خلفية الشريحة */
+.bgword{
+  position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+  z-index:0;pointer-events:none;user-select:none;white-space:nowrap;
+  font-family:var(--serif-display);font-weight:700;
+  font-size:clamp(90px,24vw,300px);line-height:1;
+  color:var(--ink);opacity:.05;
+}
+
+/* ظهور تدريجي للعناصر */
+[data-rv]{opacity:0;transform:translateY(18px);transition:opacity .65s ease,transform .8s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
+.rv-in{opacity:1;transform:none}
+
+/* ---------- رؤوس الشرائح ---------- */
+.shead{text-align:center}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:clamp(11px,1.5vh,13.5px);font-weight:700;letter-spacing:.06em;
+  color:var(--olive);border:1px solid rgba(114,122,83,.55);
+  padding:.35rem 1rem;border-radius:999px;background:rgba(234,220,194,.45);
+}
+.badge .ic{color:var(--gold)}
+.title{
+  font-family:var(--serif-display);
+  font-size:clamp(26px,4.6vh + 1.1vw,46px);
+  line-height:1.55;color:var(--ink);
+  margin-top:clamp(8px,1.4vh,16px);
+  text-wrap:balance;
+}
+.shead .orn{margin-top:clamp(8px,1.2vh,14px)}
+
+/* ---------- تخطيط عام: نص + صور ---------- */
+.cols{display:grid;grid-template-columns:1.08fr .92fr;gap:clamp(18px,3vw,46px);align-items:center;width:100%}
+.lead{
+  font-size:clamp(14.5px,2.05vh,18.5px);line-height:2.15;
+  color:#4a3a2c;text-align:start;
+}
+.lead b{color:var(--brown)}
+.points{list-style:none;display:flex;flex-direction:column;gap:clamp(9px,1.6vh,16px);margin-top:clamp(10px,1.8vh,18px)}
+.points li{
+  display:flex;gap:.7rem;align-items:flex-start;
+  font-size:clamp(13.5px,1.95vh,17px);line-height:2;
+  color:var(--ink);
+}
+.points b{color:var(--brown);font-weight:700}
+.points .mk{flex:none;width:15px;height:15px;margin-top:.42em;color:var(--gold)}
+
+/* الصور: إطار ورقي + تعليق */
+.figs{display:flex;flex-direction:column;gap:clamp(12px,2vh,20px)}
+.fig{
+  background:var(--paper-2);
+  padding:8px;border:1px solid var(--line);border-radius:4px;
+  box-shadow:var(--shadow);
+}
+.fig .imgwrap{position:relative;overflow:hidden;border-radius:2px;background:var(--sand)}
+.fig img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:sepia(.16) saturate(.92) contrast(1.02) brightness(1.01);
+  transition:transform 1s ease;
+}
+.fig:hover img{transform:scale(1.035)}
+.fig figcaption{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding-top:8px;font-size:clamp(11px,1.5vh,13px);color:var(--brown);
+}
+.fig figcaption::before,.fig figcaption::after{content:"";height:1px;width:26px;background:var(--gold-soft)}
+.ar-21{aspect-ratio:16/9}
+/* بديل زخرفي عند فشل تحميل الصورة — لا ينهار التخطيط أبدًا */
+.fig.noimg .imgwrap{display:grid;place-items:center;min-height:120px}
+.fig.noimg .imgwrap::before{content:attr(data-alt);grid-area:1/1;font-size:12.5px;color:var(--brown);padding:0 22px;text-align:center;line-height:2}
+.fig.noimg .imgwrap::after{content:"";grid-area:1/1;width:11px;height:11px;background:var(--gold);transform:rotate(45deg) translateY(-26px);opacity:.8}
+
+/* شرائح نصية صغيرة */
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(234,220,194,.55);border:1px solid var(--line);
+  border-radius:999px;padding:.45rem .95rem;
+  font-size:clamp(12.5px,1.8vh,15px);font-weight:600;color:var(--brown);
+}
+.chip .ic{color:var(--gold)}
+
+/* ============================================================
+   شريحة الغلاف
+   ============================================================ */
+.slide-cover{background:var(--paper)}
+.cover-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.cover-bg img{
+  width:100%;height:100%;object-fit:cover;
+  filter:sepia(.22) saturate(.9) brightness(1.02);
+  transform:scale(1.07);
+}
+.slide-cover.active .cover-bg img{animation:kenburns 9s ease forwards}
+@keyframes kenburns{to{transform:scale(1)}}
+.cover-bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(248,241,227,.62) 0%,rgba(248,241,227,.30) 34%,rgba(248,241,227,.55) 62%,rgba(248,241,227,.9) 100%);
+}
+.cover-panel{
+  position:relative;z-index:3;max-width:820px;margin-inline:auto;text-align:center;
+  background:rgba(248,241,227,.9);
+  border:1px solid var(--gold-soft);border-radius:6px;
+  padding:clamp(24px,4.5vh,48px) clamp(20px,4vw,60px);
+  box-shadow:var(--shadow);
+}
+.cover-panel::before{content:"";position:absolute;inset:6px;border:1px solid rgba(182,154,98,.4);border-radius:4px;pointer-events:none}
+.cover-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:clamp(11.5px,1.6vh,14px);font-weight:700;letter-spacing:.14em;color:var(--olive);
+}
+.cover-title{
+  font-family:var(--serif-display);font-weight:700;
+  font-size:clamp(38px,8.5vw,86px);line-height:1.4;color:var(--ink);
+  margin-top:clamp(8px,1.6vh,18px);
+}
+.cover-sub{
+  font-family:var(--serif-body);
+  font-size:clamp(16px,2.6vh,22px);line-height:2;color:var(--brown);
+  margin-top:clamp(6px,1.2vh,14px);
+}
+.cover-panel .orn{margin:clamp(10px,2vh,20px) auto 0}
+.author-pill{
+  display:inline-flex;align-items:center;gap:10px;margin-top:clamp(12px,2.2vh,22px);
+  background:var(--paper-2);border:1px solid var(--line);border-radius:999px;
+  padding:.55rem 1.4rem;box-shadow:0 6px 18px -10px rgba(56,41,31,.4);
+}
+.author-pill .lbl{font-size:clamp(11px,1.5vh,13px);color:var(--olive);font-weight:600}
+.author-pill .name{font-family:var(--serif-display);font-size:clamp(16px,2.4vh,21px);color:var(--ink)}
+.kbd-hints{
+  display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  margin-top:clamp(12px,2.4vh,22px);font-size:clamp(11px,1.5vh,13px);color:#6b5942;
+}
+.kbd{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;
+  background:var(--paper);padding:.22rem .7rem;font-weight:600;color:var(--brown);
+}
+
+/* ============================================================
+   المقدمة: الخط الزمني
+   ============================================================ */
+.intro-text{max-width:900px;margin-inline:auto;text-align:center}
+.timeline{
+  list-style:none;position:relative;width:100%;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.8vw,26px);
+  margin-top:clamp(8px,1.6vh,16px);
+}
+.timeline::before{
+  content:"";position:absolute;top:19px;right:11%;left:11%;z-index:0;
+  border-top:2px dashed rgba(182,154,98,.55);
+}
+.tl-item{
+  position:relative;z-index:1;text-align:center;
+  background:rgba(234,220,194,.55);border:1px solid var(--line);border-radius:10px;
+  padding:clamp(12px,2vh,20px) clamp(10px,1.4vw,18px) clamp(12px,1.8vh,18px);
+  transition:transform .4s ease,box-shadow .4s ease;
+}
+.tl-item:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.tl-dot{
+  width:38px;height:38px;border-radius:50%;margin:0 auto .55rem;
+  display:grid;place-items:center;color:var(--gold);
+  background:var(--paper);border:1px solid var(--gold-soft);
+}
+.tl-dot .ic{width:17px;height:17px}
+.tl-name{font-family:var(--serif-display);font-size:clamp(15px,2.4vh,21px);color:var(--ink)}
+.tl-desc{font-size:clamp(11.5px,1.7vh,14px);line-height:2;color:#5d4b38;margin-top:4px}
+.tl-item.here{background:linear-gradient(180deg,rgba(216,196,160,.75),rgba(234,220,194,.65));border-color:var(--brown)}
+.tl-item.here .tl-dot{background:var(--gold);color:var(--paper)}
+.tl-flag{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  background:var(--olive);color:#F4EEDA;font-size:11px;font-weight:700;
+  padding:3px 12px;border-radius:999px;box-shadow:0 4px 12px -6px rgba(56,41,31,.6);
+}
+
+/* ============================================================
+   بطاقات الأبيات (الفكرة الثالثة)
+   ============================================================ */
+.headrow{display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,3vw,40px)}
+.headrow .lead{max-width:640px}
+.headrow .fig{width:min(340px,32vw);flex:none}
+.verses{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.8vw,24px)}
+.vcard{
+  position:relative;display:flex;flex-direction:column;gap:clamp(8px,1.4vh,14px);
+  background:linear-gradient(180deg,rgba(234,220,194,.78),rgba(234,220,194,.5));
+  border:1px solid var(--line);border-top:3px double var(--gold);
+  border-radius:8px;padding:clamp(14px,2.4vh,24px) clamp(14px,1.8vw,24px);
+  box-shadow:var(--shadow);text-align:center;
+  transition:transform .4s ease;
+}
+.vcard:hover{transform:translateY(-5px)}
+.vtag{
+  align-self:center;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--serif-display);font-size:clamp(15px,2.4vh,20px);color:var(--brown);
+}
+.vtag::before,.vtag::after{content:"";height:1px;width:22px;background:var(--gold-soft)}
+.vcard blockquote{
+  font-family:var(--serif-body);
+  font-size:clamp(16px,2.7vh,23px);line-height:2.15;color:var(--ink);
+}
+.vcard cite{
+  display:block;font-style:normal;
+  font-size:clamp(12px,1.8vh,14.5px);font-weight:700;color:var(--olive);
+}
+.vcard .src{font-size:clamp(11px,1.55vh,13px);color:#7a6751}
+.reststrip{
+  display:flex;align-items:center;gap:14px;width:100%;
+  border:1px dashed rgba(118,88,61,.45);border-radius:10px;
+  background:rgba(248,241,227,.5);padding:clamp(10px,1.8vh,16px) clamp(14px,2vw,26px);
+  font-size:clamp(12.5px,1.85vh,15.5px);line-height:2.1;color:#4a3a2c;
+}
+.reststrip .ic{flex:none;color:var(--gold);width:20px;height:20px}
+.reststrip b{color:var(--brown)}
+
+/* ============================================================
+   الفكرة الرابعة: الخصائص والشعراء
+   ============================================================ */
+.poets{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(8px,1.2vw,16px)}
+.poet{
+  background:linear-gradient(180deg,rgba(234,220,194,.7),rgba(234,220,194,.45));
+  border:1px solid var(--line);border-top:3px solid var(--gold);
+  border-radius:8px;text-align:center;
+  padding:clamp(18px,3vh,30px) clamp(12px,1.3vw,20px) clamp(14px,2.4vh,26px);
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.poet:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.poet .seal{
+  width:46px;height:46px;margin:0 auto clamp(8px,1.2vh,12px);
+  display:grid;place-items:center;color:var(--gold);
+  border:1px solid var(--gold-soft);border-radius:50%;background:var(--paper);
+}
+.poet .seal .ic{width:18px;height:18px}
+.poet h3{font-family:var(--serif-display);font-size:clamp(14.5px,2.3vh,20px);color:var(--ink);line-height:1.6}
+.poet .role{font-size:clamp(11px,1.6vh,13px);font-weight:700;color:var(--olive);margin-top:2px}
+.poet p{font-size:clamp(12px,1.8vh,14px);line-height:2;color:#5d4b38;margin-top:clamp(5px,1vh,10px)}
+
+/* ============================================================
+   الفكرة الخامسة: النثر
+   ============================================================ */
+.nathr-list{list-style:none;display:flex;flex-direction:column;gap:clamp(8px,1.5vh,14px)}
+.nathr-list li{display:flex;gap:.8rem;align-items:flex-start}
+.nathr-list .num{
+  flex:none;width:30px;height:30px;border-radius:50%;margin-top:.2em;
+  display:grid;place-items:center;font-family:var(--serif-body);font-weight:700;
+  font-size:15px;color:var(--paper);background:var(--brown);
+}
+.nathr-list .nt{font-size:clamp(14px,2.1vh,17.5px);color:var(--brown);font-weight:700}
+.nathr-list p{font-size:clamp(13px,1.9vh,16px);line-height:2;color:#4a3a2c}
+.athr{
+  border:1px solid var(--line);border-right:4px solid var(--gold);border-radius:8px;
+  background:rgba(234,220,194,.5);padding:clamp(12px,2vh,18px) clamp(14px,2vw,22px);
+}
+.athr h4{display:flex;align-items:center;gap:8px;font-family:var(--serif-display);font-size:clamp(15px,2.3vh,19px);color:var(--ink);margin-bottom:6px}
+.athr h4 .ic{color:var(--gold)}
+.athr p{font-size:clamp(12.5px,1.85vh,15.5px);line-height:2.05;color:#4a3a2c}
+.athr b{color:var(--brown)}
+.scholar{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:clamp(11.5px,1.65vh,13.5px);line-height:1.95;color:#6b5942;
+}
+.scholar .ic{flex:none;color:var(--olive);margin-top:4px}
+
+/* ============================================================
+   الخاتمة
+   ============================================================ */
+.end-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.end-bg img{width:100%;height:100%;object-fit:cover;filter:sepia(.25) saturate(.85) brightness(1.02)}
+.end-bg::after{content:"";position:absolute;inset:0;background:rgba(248,241,227,.82)}
+.end-quote{
+  position:relative;z-index:2;max-width:880px;margin-inline:auto;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.4vh,24px);
+}
+.qmark{width:34px;height:34px;color:var(--gold)}
+.end-quote blockquote{
+  font-family:var(--serif-body);
+  font-size:clamp(19px,3.4vh + .6vw,32px);line-height:2.15;color:var(--ink);
+  text-wrap:balance;
+}
+.thanks{font-family:var(--serif-display);font-size:clamp(15px,2.4vh,20px);color:var(--olive)}
+
+/* ============================================================
+   شريط التحكم
+   ============================================================ */
+#progress{
+  position:fixed;top:0;right:0;height:3px;z-index:80;
+  background:linear-gradient(to left,var(--gold),var(--brown));
+  width:0%;transition:width .6s cubic-bezier(.2,.82,.24,1);
+}
+#flourish{
+  position:fixed;inset:0;z-index:70;pointer-events:none;opacity:0;
+  background:linear-gradient(115deg,transparent 42%,rgba(182,154,98,.14) 48%,rgba(248,241,227,.45) 50%,rgba(182,154,98,.14) 52%,transparent 58%);
+  background-size:300% 100%;background-position:120% 0;
+}
+#flourish.run{animation:sheen .95s ease forwards}
+@keyframes sheen{0%{opacity:1;background-position:120% 0}70%{opacity:.9}100%{opacity:0;background-position:-30% 0}}
+
+.controls{
+  position:fixed;bottom:clamp(12px,2.4vh,22px);inset-inline:0;z-index:60;
+  display:flex;justify-content:center;pointer-events:none;
+}
+.bar{
+  pointer-events:auto;display:flex;align-items:center;gap:clamp(8px,1.4vw,16px);
+  background:rgba(248,241,227,.94);border:1px solid var(--line);border-radius:999px;
+  padding:7px 10px;box-shadow:var(--shadow);
+}
+.ctl{
+  display:inline-flex;align-items:center;gap:8px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--paper);color:var(--brown);
+  font-family:var(--sans);font-size:clamp(12.5px,1.7vh,14.5px);font-weight:700;
+  padding:.5rem 1.15rem;transition:background .25s ease,transform .25s ease,opacity .25s ease;
+}
+.ctl svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.ctl:hover{background:var(--paper-2);transform:translateY(-1px)}
+.ctl:active{transform:translateY(0) scale(.97)}
+.ctl:focus-visible,.dot:focus-visible{outline:2px solid var(--olive);outline-offset:3px}
+.ctl:disabled{opacity:.32;pointer-events:none}
+.ctl.solid{background:var(--brown);color:#F6EEDC;border-color:var(--brown)}
+.ctl.solid:hover{background:#654a32}
+.counter{
+  font-family:var(--serif-body);font-weight:700;color:var(--ink);
+  font-size:clamp(13px,2vh,16px);min-width:64px;text-align:center;letter-spacing:.05em;
+}
+.dots{display:flex;gap:9px;align-items:center;padding:0 6px}
+.dot{
+  width:11px;height:11px;transform:rotate(45deg);border-radius:2px;cursor:pointer;
+  border:1.5px solid var(--gold);background:transparent;padding:0;
+  transition:background .3s ease,box-shadow .3s ease,transform .3s ease;
+}
+.dot:hover{background:rgba(182,154,98,.35)}
+.dot.on{background:var(--gold);box-shadow:0 0 0 3px rgba(182,154,98,.22);transform:rotate(45deg) scale(1.12)}
+.sep{width:1px;height:26px;background:var(--line)}
+
+/* ============================================================
+   استجابة الشاشات
+   ============================================================ */
+@media (max-width:980px){
+  .cols{grid-template-columns:1fr}
+  .figs{flex-direction:row}
+  .figs .fig{flex:1}
+  .headrow .fig{display:none}
+  .poets{grid-template-columns:repeat(3,1fr)}
+  .verses{grid-template-columns:1fr 1fr}
+  .verses .vcard:first-child{grid-column:1/-1}
+  .timeline{grid-template-columns:repeat(2,1fr)}
+  .timeline::before{display:none}
+}
+@media (max-width:680px){
+  .figs{flex-direction:column}
+  .figs .fig:nth-child(2){display:none}
+  .poets{grid-template-columns:repeat(2,1fr)}
+  .verses{grid-template-columns:1fr}
+  .dots{display:none}
+  .ctl .lbl{display:none}
+  .ctl{padding:.5rem .85rem}
+  .reststrip{flex-direction:column;text-align:center;gap:6px}
+}
+@media (max-height:700px){
+  .slide-inner{gap:10px;padding-top:16px;padding-bottom:78px}
+  .tl-item{padding:10px}
+  .poet p{display:none}
+  .cover-panel{padding:18px 26px}
+}
+
+/* تقليل الحركة لمن يفضّل ذلك */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  [data-rv]{opacity:1;transform:none}
+  .slide,.slide.active{transition:opacity .001s,visibility 0s}
+  .slide-cover.active .cover-bg img{animation:none;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- رموز SVG موحّدة -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star8" viewBox="0 0 24 24">
+    <rect x="6.4" y="6.4" width="11.2" height="11.2"/>
+    <rect x="6.4" y="6.4" width="11.2" height="11.2" transform="rotate(45 12 12)"/>
+    <circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="quill" viewBox="0 0 24 24">
+    <path d="M20 4c-5 1-9 4.5-11.5 9.5L7 17l3.5-1.5C15.5 13 19 9 20 4Z"/>
+    <path d="M7 17 4 20"/>
+  </symbol>
+  <symbol id="info" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+</svg>
+
+<div id="progress" aria-hidden="true"></div>
+<div id="flourish" aria-hidden="true"></div>
+
+<main id="deck" role="region" aria-label="عرض تقديمي: الأدب في العصر الجاهلي">
+
+  <!-- ================= الشريحة ١: الغلاف ================= -->
+  <section class="slide slide-cover active" data-title="الغلاف" aria-label="الغلاف">
+    <div class="cover-bg" aria-hidden="true">
+      <img src="https://images.pexels.com/photos/28902520/pexels-photo-28902520.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1080&w=1920" alt="" fetchpriority="high" onerror="this.remove()">
+    </div>
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <div class="slide-inner">
+      <div class="cover-panel">
+        <span class="cover-kicker" data-rv>
+          <svg class="ic lg"><use href="#star8"/></svg>
+          عرضٌ تقديميٌ في الأدب العربي القديم
+          <svg class="ic lg"><use href="#star8"/></svg>
+        </span>
+        <h1 class="cover-title" data-rv>الأدب في العصر الجاهلي</h1>
+        <p class="cover-sub" data-rv>ملامح الحياة العربية قبل الإسلام وأثرها في الشعر والنثر</p>
+        <div class="orn" data-rv>
+          <span class="line"></span>
+          <svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg>
+          <span class="line"></span>
+        </div>
+        <div data-rv>
+          <span class="author-pill">
+            <span class="lbl">إعداد</span>
+            <span class="name">ريان عز الدين</span>
+          </span>
+        </div>
+        <div class="kbd-hints" data-rv>
+          <span>للتنقّل بين الصفحات:</span>
+          <span class="kbd">المسافة</span>
+          <span class="kbd">→</span>
+          <span class="kbd">←</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٢: المقدمة ================= -->
+  <section class="slide" data-title="المقدمة" aria-label="المقدمة: كيف تغيّر الأدب عبر العصور؟">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">عبرَ العصور</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> مقدمة تمهيدية <svg class="ic"><use href="#star8"/></svg></span>
+        <h2 class="title">كيف تغيّر الأدب عبر العصور؟</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="intro-text" data-rv>
+        <p class="lead">
+          الأدب <b>مرآةُ عصره</b>؛ يتشكّل بظروف الحياة والمجتمع والثقافة، فإذا تبدّلت الأحوال تبدّلت معها موضوعاتُه وصورُه وأساليبُه.
+          وقد كان الأدب قبل الإسلام <b>شفهيًّا قريبًا من القبيلة والصحراء</b>، فجاء الإسلام فانفتح على قيمٍ وآفاقٍ جديدة،
+          ثم تنوّع وازدهر في العصرين الأموي والعباسي.
+        </p>
+      </div>
+      <ol class="timeline">
+        <li class="tl-item here" data-rv>
+          <span class="tl-flag">محور هذا العرض</span>
+          <span class="tl-dot"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3 class="tl-name">العصر الجاهلي</h3>
+          <p class="tl-desc">ذروة الشعر الشفهي، وروايتُه في المجالس والأسواق</p>
+        </li>
+        <li class="tl-item" data-rv>
+          <span class="tl-dot"><svg class="ic"><use href="#star8"/></svg></span>
+          <h3 class="tl-name">العصر الإسلامي</h3>
+          <p class="tl-desc">أدبٌ تحرّك مع الدعوة والقيم الجديدة</p>
+        </li>
+        <li class="tl-item" data-rv>
+          <span class="tl-dot"><svg class="ic"><use href="#star8"/></svg></span>
+          <h3 class="tl-name">العصر الأموي</h3>
+          <p class="tl-desc">ازدهار الخطابة وتنوّع الأغراض الشعرية</p>
+        </li>
+        <li class="tl-item" data-rv>
+          <span class="tl-dot"><svg class="ic"><use href="#star8"/></svg></span>
+          <h3 class="tl-name">العصر العباسي</h3>
+          <p class="tl-desc">اتساع الموضوعات وازدهار النقد والعلوم</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٣: الفكرة الأولى ================= -->
+  <section class="slide" data-title="البيئة والحياة" aria-label="الفكرة الأولى: البيئة والحياة في العصر الجاهلي">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">الصحراء</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> الفكرة الأولى</span>
+        <h2 class="title">البيئة والحياة في العصر الجاهلي</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="cols">
+        <div data-rv>
+          <ul class="points">
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>الصحراء دارُ حياة:</b> يرتحل العربي خلف الماء والكلأ في رحابها، فصقلت تلك الحياةُ حواسَّه وبلاغةَ لسانه.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>القبيلة عِزٌّ وحماية:</b> بها ينتسب الفرد وبشِيَمها يفاخر، وعُرفُها قانونُها، وفي مجلسها تُدار الأمور.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>قيمٌ يتسابق إليها الفتيان:</b> الشجاعة في الميدان، والكرم في الضيافة، والوفاء بالعهد، والفخر بالأصل.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>انعكاسٌ مباشر في القول:</b> فكان شعرُهم سجلَّ المآثر، ولوحاتِ الصحراء والخيل والديار في أبياتٍ خالدة.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="figs">
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="الكثبان الرملية في جزيرة العرب — صورة تعبيرية">
+              <img src="https://images.pexels.com/photos/34605538/pexels-photo-34605538.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="كثبان رملية ذهبية في الصحراء العربية عند الغروب" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>كثبان جزيرة العرب — المسرح الأول للقصيدة</figcaption>
+          </figure>
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="خيام ومجلس عربي تقليدي — صورة تعبيرية">
+              <img src="https://images.pexels.com/photos/18767559/pexels-photo-18767559.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="مخيم صحراوي بخيام تقليدية ومجلس عربي" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>الخيمة والمجلس — بيت العربي وديوان قبيلته</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٤: الفكرة الثانية ================= -->
+  <section class="slide" data-title="مفهوم الأدب ومكانته" aria-label="الفكرة الثانية: مفهوم الأدب الجاهلي ومكانته">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">ديوانُ العرب</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> الفكرة الثانية</span>
+        <h2 class="title">مفهوم الأدب الجاهلي ومكانته</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="cols">
+        <div data-rv>
+          <ul class="points">
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>ما الأدبُ عندهم؟</b> كلُّ قولٍ بليغ يوقظ الوجدان: شعرٌ موزون، وخطبةٌ مؤثرة، وحكمةٌ ومَثَلٌ وأخبارُ أيام.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>الشعر ديوانُ العرب:</b> به سجّلوا مآثرهم وأنسابهم، وعبّروا عن مشاعرهم فرحًا وحزنًا؛ وهو سجلٌّ أساسيٌّ لحياتهم، لا مصدرُهم الوحيد لمعرفة الماضي.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>الرواة حُماة الذاكرة:</b> يحفظ الراوي قصائدَ شاعر قبيلته وينقلها، وتتنافس المجالسُ والأسواق كسوق عكاظ على سماع الوافد الجديد.</span>
+            </li>
+            <li>
+              <svg class="mk ic"><use href="#star8"/></svg>
+              <span><b>الشاعرُ لسانُ القبيلة:</b> يُقدَّم في السلم مفكِّرًا، ويُستشار سلاحًا في الحرب، ففاقت مكانتُه مكانةَ فارسٍ شجاع.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="figs">
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="مخطوطة عربية قديمة بزخارف — صورة توضيحية">
+              <img src="https://images.pexels.com/photos/29342499/pexels-photo-29342499.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="مخطوطة عربية قديمة بخط مزخرف" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>صحائف دُوّن عليها الشعر بعد عصور الرواية</figcaption>
+          </figure>
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="شاعر يتلو شعره في مجلس — صورة رمزية تعبيرية">
+              <img src="https://images.pexels.com/photos/2228863/pexels-photo-2228863.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=650&w=940" alt="رجل بدوي بلباس تقليدي جالس في الصحراء" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>صورة رمزية: رواية الشعر في مجالس القوم</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٥: الفكرة الثالثة ================= -->
+  <section class="slide" data-title="الشعر وأغراضه" aria-label="الفكرة الثالثة: الشعر الجاهلي وأغراضه">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">المعلَّقات</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> الفكرة الثالثة</span>
+        <h2 class="title">الشعر الجاهلي وأغراضه</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="headrow" data-rv>
+        <p class="lead">
+          الشعر الجاهلي <b>كلامٌ موزونٌ مقفًّى</b> قاله بلغاءُ العرب قبل الإسلام، فجاب حياتهم كلَّها: مفاخرَ وأحزانًا وديارًا وخيلًا وندامى.
+        </p>
+        <figure class="fig">
+          <div class="imgwrap ar-21" data-alt="خيل تعدو في الصحراء — صورة تعبيرية">
+            <img src="https://images.pexels.com/photos/27892133/pexels-photo-27892133.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200" alt="خيول تعدو في السهول عند الغروب" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+          </div>
+          <figcaption>الخيل — مادةُ الوصف والحماسة</figcaption>
+        </figure>
+      </div>
+      <div class="verses">
+        <article class="vcard" data-rv>
+          <span class="vtag">الفَخْر</span>
+          <blockquote>«وَنَشْرَبُ إِنْ وَرَدْنَا الْمَاءَ صَفْوًا<br>وَيَشْرَبُ غَيْرُنَا كَدَرًا وَطِينًا»</blockquote>
+          <div>
+            <cite>عمرو بن كلثوم</cite>
+            <span class="src">من معلّقته — افْتِخارُ تَغْلِبَ بنفسها</span>
+          </div>
+        </article>
+        <article class="vcard" data-rv>
+          <span class="vtag">الغَزَل</span>
+          <blockquote>«قِفَا نَبْكِ مِنْ ذِكْرَى حَبِيبٍ وَمَنْزِلِ<br>بِسِقْطِ اللِّوَى بَيْنَ الدَّخُولِ فَحَوْمَلِ»</blockquote>
+          <div>
+            <cite>امرؤ القيس</cite>
+            <span class="src">من مطلع معلّقته — الوقوفُ على الأطلال</span>
+          </div>
+        </article>
+        <article class="vcard" data-rv>
+          <span class="vtag">المَدْح</span>
+          <blockquote>«يَمِينًا لَنِعْمَ السَّيِّدَانِ وُجِدْتُمَا<br>عَلَى كُلِّ حَالٍ مِنْ سَحِيثٍ وَمُبْرَمِ»</blockquote>
+          <div>
+            <cite>زهير بن أبي سلمى</cite>
+            <span class="src">من معلّقته — مدحُ صانعَي السلم: هَرِمِ بنِ سِنَان والحارثِ بنِ عَوْف</span>
+          </div>
+        </article>
+      </div>
+      <p class="reststrip" data-rv>
+        <svg class="ic"><use href="#quill"/></svg>
+        <span>ومن أغراض القصيدة الجاهلية كذلك: <b>الهجاء</b> سيفُ اللسان، و<b>الرثاء</b> صدقُ الفَقْد، و<b>الوصف</b> لوحاتُ الأطلال والخيل والصحراء، و<b>الحماسة</b> لهيبُ الحرب ونداؤها.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٦: الفكرة الرابعة ================= -->
+  <section class="slide" data-title="الخصائص والشعراء" aria-label="الفكرة الرابعة: خصائص الشعر الجاهلي وأبرز شعرائه">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">فُحولُ الشعر</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> الفكرة الرابعة</span>
+        <h2 class="title">خصائص الشعر الجاهلي وأبرز شعرائه</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="chips" data-rv style="justify-content:center">
+        <span class="chip"><svg class="ic"><use href="#star8"/></svg> قوةُ الألفاظ وجزالةُ التعبير</span>
+        <span class="chip"><svg class="ic"><use href="#star8"/></svg> تصويرٌ مقتبسٌ من بيئة الصحراء</span>
+        <span class="chip"><svg class="ic"><use href="#star8"/></svg> صدقُ العاطفة وفخرٌ قبليٌّ ظاهر</span>
+        <span class="chip"><svg class="ic"><use href="#star8"/></svg> تنوّعُ الموضوعات والأغراض</span>
+        <span class="chip"><svg class="ic"><use href="#star8"/></svg> التزامٌ بوحدة الوزن والقافية</span>
+      </div>
+      <div class="poets">
+        <article class="poet" data-rv>
+          <span class="seal"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3>امرؤ القيس</h3>
+          <div class="role">مُجدِّد القصيدة</div>
+          <p>فتح للشعر أبوابَ الغزل والوصف، وصاحبُ المعلقة الأولى وأشهرِ مطلعٍ في الشعر العربي.</p>
+        </article>
+        <article class="poet" data-rv>
+          <span class="seal"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3>زهير بن أبي سلمى</h3>
+          <div class="role">شاعر الحكمة</div>
+          <p>رزينُ القول، غلبت على شعره الحكمةُ ومدحُ أهل السلم والمروءة.</p>
+        </article>
+        <article class="poet" data-rv>
+          <span class="seal"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3>عنترة بن شداد</h3>
+          <div class="role">فارسٌ شاعر</div>
+          <p>جمع في شعره بين الفخر بالبطولة في الميدان وصدقِ الحب ونبيلِ الوفاء.</p>
+        </article>
+        <article class="poet" data-rv>
+          <span class="seal"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3>طرفة بن العبد</h3>
+          <div class="role">ابنُ التجربة</div>
+          <p>جعل شعرَه صدى لأيامه ومغامراته، وتأمُّلًا في الحياة والموت.</p>
+        </article>
+        <article class="poet" data-rv>
+          <span class="seal"><svg class="ic"><use href="#quill"/></svg></span>
+          <h3>لبيد بن ربيعة</h3>
+          <div class="role">من كبار المخضرمين</div>
+          <p>عاش بين الجاهلية والإسلام، وامتاز شعرُه ببديع الوصف وعمق الصدق.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٧: الفكرة الخامسة ================= -->
+  <section class="slide" data-title="النثر وأثر الأدب" aria-label="الفكرة الخامسة: النثر الجاهلي وأثر الأدب الجاهلي">
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <span class="bgword" aria-hidden="true">بلاغةُ النثر</span>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> الفكرة الخامسة</span>
+        <h2 class="title">النثر الجاهلي وأثر الأدب الجاهلي</h2>
+        <div class="orn"><span class="line"></span><svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg><span class="line"></span></div>
+      </header>
+      <div class="cols">
+        <div data-rv style="display:flex;flex-direction:column;gap:clamp(10px,1.8vh,18px)">
+          <ol class="nathr-list">
+            <li>
+              <span class="num">١</span>
+              <p><strong class="nt">الخطابة:</strong> فنُّ البيان في المواقف الكبرى؛ ومن أشهر ما رُوي خطبُ قُسِّ بن ساعدة الإيادي.</p>
+            </li>
+            <li>
+              <span class="num">٢</span>
+              <p><strong class="nt">الأمثال والحكم:</strong> خلاصةُ تجربة الأجيال في كلماتٍ قصار تُضرب في كل زمن.</p>
+            </li>
+            <li>
+              <span class="num">٣</span>
+              <p><strong class="nt">الوصايا:</strong> توجيهُ الحكماء والآباء الناشئةَ إلى مكارم الأخلاق وآداب المروءة.</p>
+            </li>
+            <li>
+              <span class="num">٤</span>
+              <p><strong class="nt">سجع الكهّان:</strong> جملٌ قصيرة متقاربةُ الفواصل اشتهرت في بيئة الكهانة الجاهلية.</p>
+            </li>
+          </ol>
+          <div class="athr">
+            <h4><svg class="ic"><use href="#star8"/></svg> أثر الأدب الجاهلي</h4>
+            <p><b>حفظَ اللغةَ</b> فكان مادةَ العلماء في ضبطها وشرحها، و<b>أثرى التراثَ</b> وحفظ ذاكرة القيم العربية، و<b>أسَّس لدراسة</b> تطوّر الأدب عبر العصور.</p>
+          </div>
+          <p class="scholar">
+            <svg class="ic"><use href="#info"/></svg>
+            <span>وصلنا هذا الأدب سماعًا وروايةً ثم تدوينًا؛ وقد تثبّت النقاد ففرّقوا بين الثابت الصحيح وما شُكِّك في نسبته.</span>
+          </p>
+        </div>
+        <div class="figs">
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="كتاب عربي قديم بخط اليد — صورة توضيحية">
+              <img src="https://images.pexels.com/photos/18491910/pexels-photo-18491910.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="صفحات كتاب قديم مكتوبة بالخط العربي" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>التدوين حفظَ للأجيال ما حفظه الرواة</figcaption>
+          </figure>
+          <figure class="fig" data-rv>
+            <div class="imgwrap ar-21" data-alt="مجلس عربي تقليدي داخل خيمة — صورة تعبيرية">
+              <img src="https://images.pexels.com/photos/38954089/pexels-photo-38954089.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="داخلية خيمة عربية تقليدية بدلال قهوة نحاسية" loading="lazy" decoding="async" onerror="this.closest('.fig').classList.add('noimg');this.remove()">
+            </div>
+            <figcaption>المجلس — مدرسةُ الخطابة والحكمة والوصية</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= الشريحة ٨: الخاتمة ================= -->
+  <section class="slide" data-title="الخاتمة" aria-label="الخاتمة">
+    <div class="end-bg" aria-hidden="true">
+      <img src="https://images.pexels.com/photos/33566027/pexels-photo-33566027.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1080&w=1920" alt="" loading="lazy" onerror="this.remove()">
+    </div>
+    <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
+    <div class="slide-inner">
+      <header class="shead" data-rv>
+        <span class="badge"><svg class="ic"><use href="#star8"/></svg> خاتمة <svg class="ic"><use href="#star8"/></svg></span>
+      </header>
+      <div class="end-quote">
+        <svg class="qmark ic" viewBox="0 0 24 24" data-rv><use href="#star8"/></svg>
+        <blockquote data-rv>
+          «كان الأدبُ الجاهلي مرآةً لحياة العرب، وصوتًا حمل مشاعرهم وقيمهم وصورَ بيئتهم، فبقي جزءًا أساسيًّا من ذاكرة الأدب العربي.»
+        </blockquote>
+        <div class="orn" data-rv>
+          <span class="line"></span>
+          <svg class="star" viewBox="0 0 24 24"><use href="#star8"/></svg>
+          <span class="line"></span>
+        </div>
+        <div data-rv>
+          <span class="author-pill">
+            <span class="lbl">إعداد</span>
+            <span class="name">ريان عز الدين</span>
+          </span>
+        </div>
+        <p class="thanks" data-rv>شكرًا لحُسن إصغائكم</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- شريط التحكم -->
+<nav class="controls" aria-label="أدوات التنقل في العرض">
+  <div class="bar">
+    <button id="btnPrev" class="ctl" type="button" aria-label="الشريحة السابقة" disabled>
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+      <span class="lbl">السابق</span>
+    </button>
+    <span id="counter" class="counter" aria-live="polite">١ ⁄ ٨</span>
+    <button id="btnNext" class="ctl solid" type="button" aria-label="الشريحة التالية">
+      <span class="lbl">التالي</span>
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <span class="sep" aria-hidden="true"></span>
+    <div class="dots" id="dots" role="tablist" aria-label="الانتقال إلى شريحة"></div>
+    <span class="sep" aria-hidden="true"></span>
+    <button id="btnFs" class="ctl" type="button" aria-label="تفعيل ملء الشاشة">
+      <svg id="icExpand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      <svg id="icCompress" viewBox="0 0 24 24" style="display:none"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>
+      <span class="lbl" id="fsLabel">ملء الشاشة</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ الحالة العامة ============ */
+  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var N = slides.length;
+  var idx = 0;
+  var busy = false;
+
+  var counter   = document.getElementById("counter");
+  var progress  = document.getElementById("progress");
+  var flourish  = document.getElementById("flourish");
+  var btnPrev   = document.getElementById("btnPrev");
+  var btnNext   = document.getElementById("btnNext");
+  var btnFs     = document.getElementById("btnFs");
+  var fsLabel   = document.getElementById("fsLabel");
+  var icExpand  = document.getElementById("icExpand");
+  var icCompress= document.getElementById("icCompress");
+  var dotsWrap  = document.getElementById("dots");
+
+  /* الأرقام العربية المشرقية */
+  var AR = "٠١٢٣٤٥٦٧٨٩";
+  function ar(x){ return String(x).replace(/\d/g, function(d){ return AR[d]; }); }
+
+  /* ============ نقاط التنقل ============ */
+  var dots = slides.map(function(s, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "dot";
+    b.setAttribute("role","tab");
+    b.title = s.dataset.title || ("شريحة " + (i+1));
+    b.setAttribute("aria-label", "الانتقال إلى الشريحة " + (i+1) + " من " + N + ": " + (s.dataset.title || ""));
+    b.addEventListener("click", function(){ go(i); });
+    dotsWrap.appendChild(b);
+    return b;
+  });
+
+  /* ============ الظهور التدريجي داخل الشريحة ============ */
+  function reveal(slide){
+    var els = slide.querySelectorAll("[data-rv]");
+    for (var k = 0; k < els.length; k++){
+      els[k].style.transitionDelay = RM ? "0ms" : (140 + k * 95) + "ms";
+    }
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        for (var j = 0; j < els.length; j++){ els[j].classList.add("rv-in"); }
+      });
+    });
+  }
+  function conceal(slide){
+    var els = slide.querySelectorAll("[data-rv]");
+    for (var i = 0; i < els.length; i++){
+      els[i].classList.remove("rv-in");
+      els[i].style.transitionDelay = "";
+    }
+  }
+
+  /* ============ الومضة الذهبية عند الانتقال ============ */
+  function goldFlash(){
+    if (RM) return;
+    flourish.classList.remove("run");
+    void flourish.offsetWidth;
+    flourish.classList.add("run");
+  }
+
+  /* ============ تحديث واجهة التحكم ============ */
+  function updateUI(){
+    counter.textContent = ar(idx + 1) + " ⁄ " + ar(N);
+    btnPrev.disabled = (idx === 0);
+    btnNext.disabled = (idx === N - 1);
+    progress.style.width = ((idx + 1) / N * 100) + "%";
+    for (var i = 0; i < dots.length; i++){
+      dots[i].classList.toggle("on", i === idx);
+      dots[i].setAttribute("aria-selected", i === idx ? "true" : "false");
+    }
+    for (var s = 0; s < slides.length; s++){
+      slides[s].setAttribute("aria-hidden", s === idx ? "false" : "true");
+    }
+  }
+
+  /* ============ الانتقال بين الشرائح ============ */
+  var DURATION = RM ? 60 : 780;
+
+  function go(n){
+    n = Math.max(0, Math.min(N - 1, n));
+    if (busy || n === idx) return;
+    busy = true;
+
+    var fwd = n > idx;
+    var cur = slides[idx];
+    var nxt = slides[n];
+    idx = n;
+
+    /* تهيئة الشريحة القادمة قبل دخولها */
+    nxt.classList.remove("from-next","from-prev","exit-next","exit-prev","active");
+    nxt.classList.add(fwd ? "from-next" : "from-prev");
+    nxt.style.visibility = "visible";
+    nxt.style.zIndex = 4;
+    void nxt.offsetWidth; /* إجبار إعادة التدفق */
+
+    /* خروج الحالية ودخول القادمة */
+    cur.classList.remove("active");
+    cur.classList.add(fwd ? "exit-next" : "exit-prev");
+    cur.style.zIndex = 2;
+    nxt.classList.remove("from-next","from-prev");
+    nxt.classList.add("active");
+
+    goldFlash();
+    updateUI();
+
+    window.setTimeout(function(){
+      cur.classList.remove("exit-next","exit-prev");
+      cur.style.visibility = "";
+      cur.style.zIndex = "";
+      conceal(cur);
+      reveal(nxt);
+      busy = false;
+    }, DURATION);
+  }
+
+  function next(){ go(idx + 1); }
+  function prev(){ go(idx - 1); }
+
+  btnNext.addEventListener("click", next);
+  btnPrev.addEventListener("click", prev);
+
+  /* ============ لوحة المفاتيح ============ */
+  /* اتجاه RTL: السهم الأيسر = التالي، السهم الأيمن = السابق */
+  document.addEventListener("keydown", function(e){
+    var tag = (e.target && e.target.tagName) || "";
+    var typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+    if (typing) return;
+
+    switch (e.key){
+      case "ArrowLeft":
+      case "PageDown":
+      case "ArrowDown":
+        e.preventDefault(); next(); break;
+      case "ArrowRight":
+      case "PageUp":
+      case "ArrowUp":
+        e.preventDefault(); prev(); break;
+      case " ":
+        /* لا نمنع المسافة عن الأزرار المركّز عليها حتى تعمل طبيعيًا */
+        if (!(e.target && e.target.closest && e.target.closest("button"))){
+          e.preventDefault(); next();
+        }
+        break;
+      case "Home": e.preventDefault(); go(0); break;
+      case "End":  e.preventDefault(); go(N - 1); break;
+      case "f": case "F": case "ف":
+        toggleFs(); break;
+    }
+  });
+
+  /* ============ ملء الشاشة ============ */
+  function fsActive(){
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function syncFs(){
+    var on = fsActive();
+    fsLabel.textContent = on ? "خروج من ملء الشاشة" : "ملء الشاشة";
+    icExpand.style.display   = on ? "none" : "";
+    icCompress.style.display = on ? "" : "none";
+    btnFs.setAttribute("aria-label", fsLabel.textContent);
+  }
+  function toggleFs(){
+    try{
+      if (!fsActive()){
+        var el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+    } catch (err) { /* تجاهل بهدوء */ }
+  }
+  btnFs.addEventListener("click", toggleFs);
+  document.addEventListener("fullscreenchange", syncFs);
+  document.addEventListener("webkitfullscreenchange", syncFs);
+
+  /* ============ التهيئة ============ */
+  updateUI();
+  reveal(slides[0]);
+  syncFs();
+})();
+</script>
+</body>
+</html>
