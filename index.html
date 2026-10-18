@@ -65,24 +65,59 @@ body::after{
 .orn .line{height:1px;width:min(150px,22vw);background:linear-gradient(to left,transparent,var(--gold-soft),transparent)}
 .orn .star{color:var(--gold);width:22px;height:22px;flex:none}
 
-/* ---------- هيكل الشرائح ---------- */
-#deck{position:fixed;inset:0;z-index:1;perspective:1500px}
+/* ---------- هيكل الشرائح + التكبير ---------- */
+#deck{
+  position:fixed;inset:0;z-index:1;perspective:1500px;touch-action:none;
+  transform-origin:50% 50%;will-change:transform;
+  transition:transform .48s cubic-bezier(.2,.8,.2,1);
+}
+#deck.dragging{transition:none;user-select:none}
 .slide{
   position:absolute;inset:0;
   opacity:0;visibility:hidden;pointer-events:none;
-  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),visibility 0s .78s;
+  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),clip-path .78s cubic-bezier(.2,.82,.24,1),filter .74s ease,visibility 0s .78s;
   will-change:opacity,transform;
   overflow:hidden;
 }
 .slide.active{
   opacity:1;visibility:visible;pointer-events:auto;
-  transform:none;z-index:4;
-  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),visibility 0s;
+  transform:none;z-index:4;filter:none;clip-path:circle(150% at 50% 46%);
+  transition:opacity .62s ease,transform .74s cubic-bezier(.2,.82,.24,1),clip-path .78s cubic-bezier(.2,.82,.24,1),filter .74s ease,visibility 0s;
 }
-.from-next{transform:translateX(3.4rem) rotateY(-5deg);opacity:0}
-.from-prev{transform:translateX(-3.4rem) rotateY(5deg);opacity:0}
-.exit-next{transform:translateX(-3.4rem) rotateY(5deg) scale(.985);opacity:0;z-index:2}
-.exit-prev{transform:translateX(3.4rem) rotateY(-6deg) scale(.985);opacity:0;z-index:2}
+
+/* ======= تأثيرات الانتقال: لكل شريحة أسلوب مختلف ======= */
+/* ١) قلب الصفحة الأفقي */
+.in-page{transform:translateX(3.4rem) rotateY(-5deg);opacity:0}
+.in-page.rev{transform:translateX(-3.4rem) rotateY(5deg);opacity:0}
+.out-page{transform:translateX(-3.4rem) rotateY(5deg) scale(.985);opacity:0;z-index:2}
+.out-page.rev{transform:translateX(3.4rem) rotateY(-5deg) scale(.985);opacity:0;z-index:2}
+/* ٢) صعودٌ رأسي */
+.in-rise{transform:translateY(3.4rem);opacity:0}
+.in-rise.rev{transform:translateY(-3.4rem);opacity:0}
+.out-rise{transform:translateY(-2.2rem);opacity:0;z-index:2}
+.out-rise.rev{transform:translateY(2.2rem);opacity:0;z-index:2}
+/* ٣) طيُّ المخطوط */
+.in-flip{transform:perspective(1400px) rotateY(-26deg) scale(.95);opacity:0}
+.in-flip.rev{transform:perspective(1400px) rotateY(26deg) scale(.95);opacity:0}
+.out-flip{transform:perspective(1400px) rotateY(14deg) scale(.97);opacity:0;z-index:2}
+.out-flip.rev{transform:perspective(1400px) rotateY(-14deg) scale(.97);opacity:0;z-index:2}
+/* ٤) تكبيرٌ وثوب */
+.in-zoomin{transform:scale(.78);opacity:0}
+.out-zoomin{transform:scale(1.08);opacity:0;z-index:2}
+/* ٥) اقترابٌ من بعيد */
+.in-zoomout{transform:scale(1.18);opacity:0}
+.out-zoomout{transform:scale(.9);opacity:0;z-index:2}
+/* ٦) ميلانٌ رشيق */
+.in-swing{transform:rotate(-7deg) scale(.86);opacity:0}
+.in-swing.rev{transform:rotate(7deg) scale(.86);opacity:0}
+.out-swing{transform:rotate(5deg) scale(.94);opacity:0;z-index:2}
+.out-swing.rev{transform:rotate(-5deg) scale(.94);opacity:0;z-index:2}
+/* ٧) ذوبانٌ ناعم */
+.in-fade{opacity:0;filter:blur(10px)}
+.out-fade{opacity:0;filter:blur(8px);z-index:2}
+/* ٨) انفتاحٌ دائري */
+.in-iris{opacity:0;clip-path:circle(3% at 50% 46%)}
+.out-iris{opacity:0;z-index:2}
 
 .slide-inner{
   position:relative;z-index:2;height:100%;
@@ -402,7 +437,10 @@ body::after{
 .controls{
   position:fixed;bottom:clamp(12px,2.4vh,22px);inset-inline:0;z-index:60;
   display:flex;justify-content:center;pointer-events:none;
+  transition:opacity .45s ease,transform .45s ease;
 }
+.controls.hidden{opacity:0;transform:translateY(14px)}
+.controls.hidden .bar{pointer-events:none}
 .bar{
   pointer-events:auto;display:flex;align-items:center;gap:clamp(8px,1.4vw,16px);
   background:rgba(248,241,227,.94);border:1px solid var(--line);border-radius:999px;
@@ -425,6 +463,9 @@ body::after{
   font-family:var(--serif-body);font-weight:700;color:var(--ink);
   font-size:clamp(13px,2vh,16px);min-width:64px;text-align:center;letter-spacing:.05em;
 }
+.ctl.iz{padding:.45rem .62rem}
+.ctl.iz svg{width:15px;height:15px}
+.ctl.pct{min-width:70px;justify-content:center;font-family:var(--serif-body);font-size:clamp(12.5px,1.8vh,14.5px)}
 .dots{display:flex;gap:9px;align-items:center;padding:0 6px}
 .dot{
   width:11px;height:11px;transform:rotate(45deg);border-radius:2px;cursor:pointer;
@@ -499,7 +540,7 @@ body::after{
 <main id="deck" role="region" aria-label="عرض تقديمي: الأدب في العصر الجاهلي">
 
   <!-- ================= الشريحة ١: الغلاف ================= -->
-  <section class="slide slide-cover active" data-title="الغلاف" aria-label="الغلاف">
+  <section class="slide slide-cover active" data-title="الغلاف" data-fx="iris" aria-label="الغلاف">
     <div class="cover-bg" aria-hidden="true">
       <img src="https://images.pexels.com/photos/28902520/pexels-photo-28902520.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1080&w=1920" alt="" fetchpriority="high" onerror="this.remove()">
     </div>
@@ -535,7 +576,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٢: المقدمة ================= -->
-  <section class="slide" data-title="المقدمة" aria-label="المقدمة: كيف تغيّر الأدب عبر العصور؟">
+  <section class="slide" data-title="المقدمة" data-fx="rise" aria-label="المقدمة: كيف تغيّر الأدب عبر العصور؟">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">عبرَ العصور</span>
     <div class="slide-inner">
@@ -578,7 +619,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٣: الفكرة الأولى ================= -->
-  <section class="slide" data-title="البيئة والحياة" aria-label="الفكرة الأولى: البيئة والحياة في العصر الجاهلي">
+  <section class="slide" data-title="البيئة والحياة" data-fx="page" aria-label="الفكرة الأولى: البيئة والحياة في العصر الجاهلي">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">الصحراء</span>
     <div class="slide-inner">
@@ -627,7 +668,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٤: الفكرة الثانية ================= -->
-  <section class="slide" data-title="مفهوم الأدب ومكانته" aria-label="الفكرة الثانية: مفهوم الأدب الجاهلي ومكانته">
+  <section class="slide" data-title="مفهوم الأدب ومكانته" data-fx="flip" aria-label="الفكرة الثانية: مفهوم الأدب الجاهلي ومكانته">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">ديوانُ العرب</span>
     <div class="slide-inner">
@@ -676,7 +717,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٥: الفكرة الثالثة ================= -->
-  <section class="slide" data-title="الشعر وأغراضه" aria-label="الفكرة الثالثة: الشعر الجاهلي وأغراضه">
+  <section class="slide" data-title="الشعر وأغراضه" data-fx="zoomin" aria-label="الفكرة الثالثة: الشعر الجاهلي وأغراضه">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">المعلَّقات</span>
     <div class="slide-inner">
@@ -730,7 +771,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٦: الفكرة الرابعة ================= -->
-  <section class="slide" data-title="الخصائص والشعراء" aria-label="الفكرة الرابعة: خصائص الشعر الجاهلي وأبرز شعرائه">
+  <section class="slide" data-title="الخصائص والشعراء" data-fx="swing" aria-label="الفكرة الرابعة: خصائص الشعر الجاهلي وأبرز شعرائه">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">فُحولُ الشعر</span>
     <div class="slide-inner">
@@ -782,7 +823,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٧: الفكرة الخامسة ================= -->
-  <section class="slide" data-title="النثر وأثر الأدب" aria-label="الفكرة الخامسة: النثر الجاهلي وأثر الأدب الجاهلي">
+  <section class="slide" data-title="النثر وأثر الأدب" data-fx="fade" aria-label="الفكرة الخامسة: النثر الجاهلي وأثر الأدب الجاهلي">
     <div class="frame" aria-hidden="true"><span class="cnc tl"></span><span class="cnc tr"></span><span class="cnc bl"></span><span class="cnc br"></span></div>
     <span class="bgword" aria-hidden="true">بلاغةُ النثر</span>
     <div class="slide-inner">
@@ -839,7 +880,7 @@ body::after{
   </section>
 
   <!-- ================= الشريحة ٨: الخاتمة ================= -->
-  <section class="slide" data-title="الخاتمة" aria-label="الخاتمة">
+  <section class="slide" data-title="الخاتمة" data-fx="zoomout" aria-label="الخاتمة">
     <div class="end-bg" aria-hidden="true">
       <img src="https://images.pexels.com/photos/33566027/pexels-photo-33566027.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1080&w=1920" alt="" loading="lazy" onerror="this.remove()">
     </div>
@@ -885,6 +926,16 @@ body::after{
     </button>
     <span class="sep" aria-hidden="true"></span>
     <div class="dots" id="dots" role="tablist" aria-label="الانتقال إلى شريحة"></div>
+    <span class="sep" aria-hidden="true"></span>
+    <button id="btnZoomOut" class="ctl iz" type="button" aria-label="تصغير العرض" title="تصغير (−)">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+    </button>
+    <button id="btnZoomPct" class="ctl iz pct" type="button" aria-label="إعادة العرض إلى الحجم الأصلي" title="إعادة العرض إلى ١٠٠٪">
+      <span id="zoomPct">١٠٠٪</span>
+    </button>
+    <button id="btnZoomIn" class="ctl iz" type="button" aria-label="تكبير العرض" title="تكبير (+)">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
     <span class="sep" aria-hidden="true"></span>
     <button id="btnFs" class="ctl" type="button" aria-label="تفعيل ملء الشاشة">
       <svg id="icExpand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
@@ -979,6 +1030,16 @@ body::after{
   /* ============ الانتقال بين الشرائح ============ */
   var DURATION = RM ? 60 : 780;
 
+  /* أسماء تأثيرات الانتقال المتاحة — لكل شريحة أسلوب مختلف عبر data-fx */
+  var FXS = ["page","rise","flip","zoomin","zoomout","swing","fade","iris"];
+  function clearFx(el){
+    for (var i = 0; i < FXS.length; i++){
+      el.classList.remove("in-" + FXS[i]);
+      el.classList.remove("out-" + FXS[i]);
+    }
+    el.classList.remove("rev");
+  }
+
   function go(n){
     n = Math.max(0, Math.min(N - 1, n));
     if (busy || n === idx) return;
@@ -989,27 +1050,35 @@ body::after{
     var nxt = slides[n];
     idx = n;
 
+    /* تأثير الانتقال الخاص بالشريحة القادمة */
+    var fx = nxt.getAttribute("data-fx") || "page";
+
     /* تهيئة الشريحة القادمة قبل دخولها */
-    nxt.classList.remove("from-next","from-prev","exit-next","exit-prev","active");
-    nxt.classList.add(fwd ? "from-next" : "from-prev");
+    clearFx(nxt);
+    nxt.classList.remove("active");
+    nxt.classList.add("in-" + fx);
+    if (!fwd) nxt.classList.add("rev");
     nxt.style.visibility = "visible";
     nxt.style.zIndex = 4;
     void nxt.offsetWidth; /* إجبار إعادة التدفق */
 
     /* خروج الحالية ودخول القادمة */
     cur.classList.remove("active");
-    cur.classList.add(fwd ? "exit-next" : "exit-prev");
+    clearFx(cur);
+    cur.classList.add("out-" + fx);
+    if (!fwd) cur.classList.add("rev");
     cur.style.zIndex = 2;
-    nxt.classList.remove("from-next","from-prev");
+    nxt.classList.remove("in-" + fx, "rev");
     nxt.classList.add("active");
 
     goldFlash();
     updateUI();
 
     window.setTimeout(function(){
-      cur.classList.remove("exit-next","exit-prev");
+      clearFx(cur);
       cur.style.visibility = "";
       cur.style.zIndex = "";
+      if (!fwd) clearFx(nxt);
       conceal(cur);
       reveal(nxt);
       busy = false;
@@ -1046,6 +1115,11 @@ body::after{
         break;
       case "Home": e.preventDefault(); go(0); break;
       case "End":  e.preventDefault(); go(N - 1); break;
+      case "+": case "=":
+        zoomAt(Z.s + STEP, innerWidth / 2, innerHeight / 2); break;
+      case "-": case "_":
+        zoomAt(Z.s - STEP, innerWidth / 2, innerHeight / 2); break;
+      case "0": resetZoom(); break;
       case "f": case "F": case "ف":
         toggleFs(); break;
     }
@@ -1078,10 +1152,119 @@ body::after{
   document.addEventListener("fullscreenchange", syncFs);
   document.addEventListener("webkitfullscreenchange", syncFs);
 
+  /* ============ التكبير والتحريك بالطول والعرض ============ */
+  var deck      = document.getElementById("deck");
+  var zoomPct   = document.getElementById("zoomPct");
+  var btnZIn    = document.getElementById("btnZoomIn");
+  var btnZOut   = document.getElementById("btnZoomOut");
+  var btnZPct   = document.getElementById("btnZoomPct");
+  var STEP = 0.25, MINZ = 0.5, MAXZ = 3; /* التصغير حتى ٥٠٪ والتكبير حتى ٣٠٠٪ */
+  var Z = { s: 1, tx: 0, ty: 0 };
+
+  function clampZ(v){ return Math.max(MINZ, Math.min(MAXZ, v)); }
+
+  function applyZoom(noanim){
+    /* تقييد التحريك بحدود المحتوى بحسب مستوى التكبير */
+    if (Z.s <= 1.001){ Z.tx = 0; Z.ty = 0; }
+    else {
+      var mx = (Z.s - 1) / 2 * deck.clientWidth;
+      var my = (Z.s - 1) / 2 * deck.clientHeight;
+      Z.tx = Math.max(-mx, Math.min(mx, Z.tx));
+      Z.ty = Math.max(-my, Math.min(my, Z.ty));
+    }
+    deck.classList.toggle("dragging", !!noanim);
+    deck.style.transform = "translate(" + Z.tx + "px," + Z.ty + "px) scale(" + Z.s + ")";
+    deck.style.cursor = Z.s > 1.02 ? (noanim ? "grabbing" : "grab") : "";
+    zoomPct.textContent = ar(Math.round(Z.s * 100)) + "٪";
+    btnZOut.disabled = Z.s <= MINZ + 0.001;
+    btnZIn.disabled  = Z.s >= MAXZ - 0.001;
+  }
+
+  /* تكبيرٌ متحرّك حول نقطة معيّنة تبقى ثابتة تحت المؤشر */
+  function zoomAt(ns, cx, cy){
+    ns = clampZ(Math.round(ns * 100) / 100);
+    if (ns === Z.s) return;
+    var r  = ns / Z.s;
+    var vx = cx - window.innerWidth  / 2;
+    var vy = cy - window.innerHeight / 2;
+    Z.tx = vx * (1 - r) + Z.tx * r;
+    Z.ty = vy * (1 - r) + Z.ty * r;
+    Z.s  = ns;
+    applyZoom(false);
+  }
+  function resetZoom(){ Z.s = 1; Z.tx = 0; Z.ty = 0; applyZoom(false); }
+
+  btnZIn.addEventListener("click",  function(){ zoomAt(Z.s + STEP, innerWidth / 2, innerHeight / 2); });
+  btnZOut.addEventListener("click", function(){ zoomAt(Z.s - STEP, innerWidth / 2, innerHeight / 2); });
+  btnZPct.addEventListener("click", resetZoom);
+
+  /* تكبير بالعجلة مع مفتاح Ctrl حول موضع المؤشر */
+  deck.addEventListener("wheel", function(e){
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    zoomAt(Z.s * (e.deltaY < 0 ? 1.12 : 0.89), e.clientX, e.clientY);
+  }, { passive:false });
+
+  /* نقرة مزدوجة: تكبير من الحجم الأصلي إلى ١٨٠٪، واستعادة ١٠٠٪ في غير ذلك */
+  deck.addEventListener("dblclick", function(e){
+    if (Math.abs(Z.s - 1) > 0.02) resetZoom();
+    else zoomAt(1.8, e.clientX, e.clientY);
+  });
+
+  /* السحب لتحريك العرض أفقيًّا وعموديًّا عندما يكون مكبَّرًا */
+  var panning = false, lx = 0, ly = 0;
+  deck.addEventListener("pointerdown", function(e){
+    if (Z.s <= 1.02) return;
+    panning = true; lx = e.clientX; ly = e.clientY;
+    if (deck.setPointerCapture) deck.setPointerCapture(e.pointerId);
+    applyZoom(true);
+  });
+  deck.addEventListener("pointermove", function(e){
+    if (!panning) return;
+    Z.tx += e.clientX - lx;
+    Z.ty += e.clientY - ly;
+    lx = e.clientX; ly = e.clientY;
+    applyZoom(true);
+  });
+  ["pointerup","pointercancel"].forEach(function(ev){
+    deck.addEventListener(ev, function(){
+      if (!panning) return;
+      panning = false;
+      applyZoom(false);
+    });
+  });
+
+  /* ============ إخفاء شريط التحكم تلقائيًّا عند ابتعاد المؤشر ============ */
+  var controlsEl = document.querySelector(".controls");
+  var hideTimer  = null;
+  var HIDE_DELAY = 2600;
+
+  function scheduleHide(){
+    clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(function(){
+      /* لا نُخفي الشريط بينما المؤشر فوقه */
+      if (!controlsEl.matches(":hover")) controlsEl.classList.add("hidden");
+    }, HIDE_DELAY);
+  }
+  function showControls(){
+    controlsEl.classList.remove("hidden");
+    scheduleHide();
+  }
+  document.addEventListener("mousemove", showControls);
+  document.addEventListener("pointerdown", showControls);
+  document.addEventListener("keydown", showControls);
+  controlsEl.addEventListener("mouseenter", function(){
+    clearTimeout(hideTimer);
+    controlsEl.classList.remove("hidden");
+  });
+  controlsEl.addEventListener("mouseleave", scheduleHide);
+
   /* ============ التهيئة ============ */
   updateUI();
   reveal(slides[0]);
   syncFs();
+  applyZoom();
+  showControls(); /* إظهار أولي ثم يختفي تلقائيًّا */
 })();
 </script>
 </body>
